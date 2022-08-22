@@ -1,5 +1,6 @@
 <?php
 
+use App\GraphQL\Queries\SDM;
 use App\Http\Controllers\HumanResourceController;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -43,3 +44,4 @@ Route::post('/sanctum/token', function (Request $request) {
 });
 
 Route::post('/sdm', [HumanResourceController::class, 'index']);
+Route::post('/tes', [SDM::class, 'tes']);

@@ -4,9 +4,14 @@
 scalar DateTime
     @scalar(class: "Nuwave\\Lighthouse\\Schema\\Types\\Scalars\\DateTime")
 
+type Query {
+    me: User! @auth @guard
+}
 
-type Query{
-    SDM: [HumanResource] @all
+type Mutation {
+    login(email: String!, password: String!): String! @field(resolver: "Authentication@login")
+    verify(token: String!): Boolean! @field(resolver: "Authentication@verify")
+    logout: User @guard
 }
 
 type User {
@@ -27,15 +32,4 @@ type User {
 
     "When the account was last updated."
     updated_at: DateTime!
-}
-
-type HumanResource {
-    id_sdm: String,
-    nama_sdm: String,
-    nidn: String,
-    nip: String,
-    nama_status_aktif: String,
-    nama_status_pegawai: String,
-    jenis_sdm: String,
-    # pendidikan_formal: [FormalEducation] @hasMany
 }
