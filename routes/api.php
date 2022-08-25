@@ -1,13 +1,14 @@
 <?php
 
-use App\GraphQL\Queries\SDM;
-use App\Http\Controllers\HumanResourceController;
 use App\Models\User;
+use App\GraphQL\Queries\SDM;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LoginController;
 use Illuminate\Validation\ValidationException;
+use App\Http\Controllers\HumanResourceController;
 
 /*
 |--------------------------------------------------------------------------
@@ -24,24 +25,10 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::post('/login', [LoginController::class, 'index']);
-
-Route::post('/sanctum/token', function (Request $request) {
-    $request->validate([
-        'email' => 'required|email',
-        'password' => 'required',
-    ]);
-
-    $user = User::where('email', $request->email)->first();
-
-    if (!$user || !Hash::check($request->password, $user->password)) {
-        throw ValidationException::withMessages([
-            'email' => ['The provided credentials are incorrect.'],
-        ]);
-    }
-
-    return ['token' => $user->createToken($request->email)->plainTextToken];
-});
-
-Route::post('/sdm', [HumanResourceController::class, 'index']);
-Route::post('/tes', [SDM::class, 'tes']);
+Route::post('/login', [LoginController::class, 'login']);
+Route::post('/verify', [LoginController::class, 'verify']);
+Route::post('/logout', [LoginController::class, 'logout']);
+// Route::get('/tes', function () {
+//     // dd(session()->get('restToken'));
+//     // dd(Auth::user());
+// });
