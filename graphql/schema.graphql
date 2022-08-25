@@ -1,9 +1,5 @@
 #import auth.graphql
 
-"A datetime string with format `Y-m-d H:i:s`, e.g. `2018-05-23 13:43:32`."
-scalar DateTime
-    @scalar(class: "Nuwave\\Lighthouse\\Schema\\Types\\Scalars\\DateTime")
-
 type Query {
     me: User! @auth @guard
 }
@@ -11,25 +7,11 @@ type Query {
 type Mutation {
     login(email: String!, password: String!): String! @field(resolver: "Authentication@login")
     verify(token: String!): Boolean! @field(resolver: "Authentication@verify")
-    logout: User @guard
+    logout(token: String!): User @field(resolver: "Authentication@logout")
 }
 
 type User {
-    "Unique primary key."
-    id: ID!
-
-    "Non-unique name."
-    name: String!
-
-    "Unique email address."
-    email: String!
-
-    "When the email was verified."
-    email_verified_at: DateTime
-
-    "When the account was created."
-    created_at: DateTime!
-
-    "When the account was last updated."
-    updated_at: DateTime!
+    id: ID
+    nama: String
+    email: String
 }
