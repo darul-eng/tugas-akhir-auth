@@ -20,9 +20,9 @@ class LoginController extends Controller
         $user = User::where('email', $request->email)->first();
 
         if (!$user || !Hash::check($request->password, $user->password)) {
-            throw ValidationException::withMessages([
-                'email' => ['The provided credentials are incorrect.'],
-            ]);
+            $error = 'The provided credentials are incorrect.';
+
+            return handleError('Unprocessable Content', ['error' => $error], 422);
         }
 
         $token = $user->createToken($request->email)->plainTextToken;
@@ -34,14 +34,7 @@ class LoginController extends Controller
             'updated_at' => now()
         ]);
 
-        $res = [
-            'message' => 'success',
-            'datas' => ['token' => $token],
-        ];
-
-        // return $res;
-
-        return response()->json($res, 200);
+        return handleResponse(['token' => $token], 'success');
     }
 
     public function verify(Request $request)
@@ -53,16 +46,13 @@ class LoginController extends Controller
         $token = UserToken::where('token', $request->token)->first();
         if ($token != null) {
             $datas = ['verify' => true];
+            $code = 200;
         }else{
             $datas = ['verify' => false];
+            $code = 401;
         }
 
-        $res = [
-            'message' => 'success',
-            'datas' => $datas,
-        ];
-
-        return response()->json($res, 200);
+        return response()->json($datas, $code);
     }
 
     public function logout(Request $request)
