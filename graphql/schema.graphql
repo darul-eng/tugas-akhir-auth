@@ -1,5 +1,3 @@
-#import auth.graphql
-
 type Query {
     me: User! @auth @guard
 }
