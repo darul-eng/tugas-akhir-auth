@@ -12,4 +12,6 @@ type User {
     id: ID
     nama: String
     email: String
+    created_at: String
+    updated_at: String
 }

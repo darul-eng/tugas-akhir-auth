@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use App\Models\UserToken;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
 
@@ -27,12 +28,18 @@ class LoginController extends Controller
 
         $token = $user->createToken($request->email)->plainTextToken;
 
-        UserToken::create([
+        DB::table('user_tokens')->insert([
             'user_id' => $user->id,
             'token' => $token,
             'created_at' => now(),
             'updated_at' => now()
         ]);
+        // UserToken::create([
+        //     'user_id' => $user->id,
+        //     'token' => $token,
+        //     'created_at' => now(),
+        //     'updated_at' => now()
+        // ]);
 
         return handleResponse(['token' => $token], 'success');
     }
@@ -43,7 +50,8 @@ class LoginController extends Controller
             'token' => 'required'
         ]);
 
-        $token = UserToken::where('token', $request->token)->first();
+        // $token = UserToken::where('token', $request->token)->first();
+        $token = DB::table('user_tokens')->where('token', $request->token)->first();
         if ($token != null) {
             $datas = ['verify' => true];
             $code = 200;
@@ -61,7 +69,8 @@ class LoginController extends Controller
             'token' => 'required'
         ]);
 
-        $user = UserToken::where('token', $request->token)->with('user')->first();
+        // $user = UserToken::where('token', $request->token)->with('user')->first();
+        $user = DB::table('user_tokens')->where('token', $request->token)->with('user')->first();
 
         if ($user) {
             $token = UserToken::find($user->id);
