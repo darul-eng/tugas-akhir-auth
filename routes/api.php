@@ -27,8 +27,3 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::post('/login', [LoginController::class, 'login']);
 Route::post('/verify', [LoginController::class, 'verify']);
-Route::post('/logout', [LoginController::class, 'logout']);
-// Route::get('/tes', function () {
-//     // dd(session()->get('restToken'));
-//     // dd(Auth::user());
-// });
